@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,7 +46,8 @@ public class RemoveItem extends AppCompatActivity implements View.OnClickListene
     private DatabaseReference databaseReference;
 
     private Button btnLogout, btnDetect, btnRemove;
-    private EditText txtItemName, txtItemQuant, txtItemPrice, txtItemCode;
+    private EditText txtItemName, txtItemQuant, txtItemPrice, txtItemCode, txtItemDate, txtItemLoc;
+    private CheckBox itemThird, itemCheck;
     private CameraView cameraView;
     private AlertDialog waitingDialog;
 
@@ -53,7 +56,7 @@ public class RemoveItem extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_remove_item);setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_remove_item);
 
         waitingDialog = new SpotsDialog.Builder().setContext(this)
                 .setMessage("Please wait").setCancelable(false).build();
@@ -101,6 +104,10 @@ public class RemoveItem extends AppCompatActivity implements View.OnClickListene
         txtItemQuant = findViewById(R.id.txtQuant);
         txtItemPrice = findViewById(R.id.txtPrice);
         txtItemCode = findViewById(R.id.txtCode);
+        txtItemLoc = findViewById(R.id.txtItemLoc);
+        txtItemDate = findViewById(R.id.txtItemDate);
+        itemThird = findViewById(R.id.itemThird);
+        itemCheck = findViewById(R.id.itemCheck);
 
         btnLogout.setOnClickListener(this);
         btnDetect.setOnClickListener(this);
@@ -138,10 +145,22 @@ public class RemoveItem extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
+                    int spinSize = getResources().getStringArray(R.array.ItemLocation).length;
                     ItemData itemData = dataSnapshot.getValue(ItemData.class);
                     txtItemName.setText(itemData.getItemName());
                     txtItemQuant.setText("" + itemData.getItemQuant());
                     txtItemPrice.setText("" + itemData.getItemPrice());
+                    txtItemDate.setText(itemData.getItemDatePur());
+                    txtItemLoc.setText("" + itemData.getItemLoc());
+                    if (itemData.getItemThird() == true)
+                        itemThird.setChecked(true);
+                    else
+                        itemThird.setChecked(false);
+
+                    if (itemData.getItemCheck() == true)
+                        itemCheck.setChecked(true);
+                    else
+                        itemCheck.setChecked(false);
                 }
             }
 
@@ -175,6 +194,10 @@ public class RemoveItem extends AppCompatActivity implements View.OnClickListene
         txtItemName.setText("");
         txtItemQuant.setText("");
         txtItemPrice.setText("");
+        txtItemLoc.setSelection(0);
+        txtItemDate.setText("");
+        itemThird.setChecked(false);
+        itemCheck.setChecked(false);
     }
 
     @Override

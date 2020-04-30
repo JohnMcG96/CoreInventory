@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.Application;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -11,8 +14,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +43,11 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import dmax.dialog.SpotsDialog;
@@ -43,18 +56,19 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
-
     private Button btnLogout, btnAddItem, btnDetect;
-    private EditText txtItemName, txtItemQuant, txtItemPrice, txtItemCode;
+    private EditText txtItemName, txtItemQuant, txtItemPrice, txtItemCode, txtItemDate;
+    private Spinner txtItemLoc;
+    private CheckBox itemThird, itemCheck;
     private CameraView cameraView;
     private AlertDialog waitingDialog;
+
+    private boolean itemExists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         waitingDialog = new SpotsDialog.Builder().setContext(this)
                 .setMessage("Please wait").setCancelable(false).build();
@@ -103,10 +117,20 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
         txtItemQuant = findViewById(R.id.txtQuant);
         txtItemPrice = findViewById(R.id.txtPrice);
         txtItemCode = findViewById(R.id.txtCode);
+        txtItemLoc = findViewById(R.id.txtItemLoc);
+        txtItemDate = findViewById(R.id.txtItemDate);
+        itemThird = findViewById(R.id.itemThird);
+        itemCheck = findViewById(R.id.itemCheck);
 
         btnLogout.setOnClickListener(this);
         btnDetect.setOnClickListener(this);
         btnAddItem.setOnClickListener(this);
+
+        ArrayAdapter<String> itemLocAd = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                getResources().getStringArray(R.array.ItemLocation));
+        itemLocAd.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        txtItemLoc.setAdapter(itemLocAd);
     }
 
     private void runDetector(Bitmap bitmap){
@@ -124,7 +148,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddItem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddItem.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -135,6 +159,24 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
             code = item.getRawValue();
             txtItemCode.setText(code);
         }
+        final String finalCode = code;
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    if (snapshot.child(finalCode).exists()) {
+                        itemExists = true;
+                        txtItemCode.setText("");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         waitingDialog.dismiss();
         cameraView.start();
     }
@@ -145,6 +187,10 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
         String name = txtItemName.getText().toString().trim();
         int quant = Integer.parseInt(txtItemQuant.getText().toString().trim());
         double price = Double.parseDouble(txtItemPrice.getText().toString().trim());
+        String location = txtItemLoc.getSelectedItem().toString().trim();
+        String date = txtItemDate.getText().toString().trim();
+        boolean third = itemThird.isChecked();
+        boolean checked = itemCheck.isChecked();
 
         if(TextUtils.isEmpty(code)){
             Toast.makeText(this, "Please scan a valid barcode.", Toast.LENGTH_LONG).show();
@@ -158,8 +204,14 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
         else if(price == 0){
             Toast.makeText(this, "Please enter a valid Item Price.", Toast.LENGTH_LONG).show();
         }
+        else if(TextUtils.equals(location, "Item Location")){
+            Toast.makeText(this, "Please enter a valid Item Location.", Toast.LENGTH_LONG).show();
+        }
+        else if(TextUtils.isEmpty(date)){
+            Toast.makeText(this, "Please enter a valid Item Purchase Date.", Toast.LENGTH_LONG).show();
+        }
         else{
-            ItemData itemData = new ItemData(code, name, quant, price);
+            ItemData itemData = new ItemData(code, name, quant, price, location, date, third, checked);
 
             databaseReference.child(code).setValue(itemData);
             Toast.makeText(this, "Item added.", Toast.LENGTH_LONG).show();
@@ -167,6 +219,11 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
             txtItemName.setText("");
             txtItemQuant.setText("");
             txtItemPrice.setText("");
+            txtItemLoc.setSelection(0);
+            txtItemDate.setText("");
+            itemThird.setChecked(false);
+            itemCheck.setChecked(false);
+            itemExists = false;
         }
     }
 
@@ -190,6 +247,10 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         cameraView.start();
+        if (itemExists == true)
+            Toast.makeText(this, "Item already exists, please use Update Item.", Toast.LENGTH_LONG).show();
+        itemExists = false;
+
     }
 
     @Override

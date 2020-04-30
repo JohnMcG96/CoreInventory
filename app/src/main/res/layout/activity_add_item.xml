@@ -10,8 +10,8 @@
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Update Items"
+        android:paddingVertical="10dp"
+        android:text="Add Items"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,21 +20,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/txtTitle">
 
         <com.wonderkiln.camerakit.CameraView
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btnDetect"
@@ -46,6 +46,7 @@
             android:id="@+id/txtCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="Item Code"
             android:clickable="false"
             android:ems="10"
             android:enabled="false"
@@ -66,8 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Item Price"
-            android:inputType="textPersonName" />
+            android:hint="Item Value"
+            android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/txtQuant"
@@ -75,7 +76,33 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Item Quantity"
-            android:inputType="textPersonName" />
+            android:inputType="number" />
+
+        <Spinner
+            android:id="@+id/txtItemLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Item Location"
+            android:ems="10" />
+
+        <EditText
+            android:id="@+id/txtItemDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date Purchased"
+            android:inputType="date" />
+
+        <CheckBox
+            android:id="@+id/itemThird"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Third Party" />
+
+        <CheckBox
+            android:id="@+id/itemCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Checked" />
 
         <Button
             android:id="@+id/btnAddItem"
@@ -89,11 +116,11 @@
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="10dp"
+        android:paddingVertical="10dp"
         android:text="Logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

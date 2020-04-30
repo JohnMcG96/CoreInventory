@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">CoreInventory</string>
+
+    <string-array name="ItemLocation">
+        <item>Item Location</item>
+        <item>Board Game 1</item>
+        <item>Board Game 2</item>
+        <item>Board Game 3</item>
+        <item>Bookshelf</item>
+        <item>Controller Box</item>
+        <item>Networking Box</item>
+        <item>Power and Video</item>
+        <item>Retro Box</item>
+        <item>RPG 1</item>
+        <item>RPG 2</item>
+        <item>RPG 3</item>
+        <item>Shelf 1</item>
+        <item>Shelf 2</item>
+        <item>Shelf 3</item>
+        <item>Sound Box</item>
+        <item>Terrain 1</item>
+        <item>Terrain 2</item>
+        <item>Terrain 3</item>
+        <item>Video Games 1</item>
+        <item>Video Games 2</item>
+        <item>Other</item>
+    </string-array>
 </resources>
