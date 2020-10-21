@@ -54,7 +54,7 @@
             android:id="@+id/btnViewMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Items" />
+            android:text="Report Menu" />
 
         <Button
             android:id="@+id/btnLogout"

@@ -182,35 +182,35 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void addItem(){
-
-        String code = txtItemCode.getText().toString().trim();
-        String name = txtItemName.getText().toString().trim();
-        int quant = Integer.parseInt(txtItemQuant.getText().toString().trim());
-        double price = Double.parseDouble(txtItemPrice.getText().toString().trim());
-        String location = txtItemLoc.getSelectedItem().toString().trim();
-        String date = txtItemDate.getText().toString().trim();
-        boolean third = itemThird.isChecked();
-        boolean checked = itemCheck.isChecked();
-
-        if(TextUtils.isEmpty(code)){
+        if(TextUtils.isEmpty(txtItemCode.getText().toString().trim())){
             Toast.makeText(this, "Please scan a valid barcode.", Toast.LENGTH_LONG).show();
         }
-        else if(TextUtils.isEmpty(name)){
+        else if(TextUtils.isEmpty(txtItemName.getText().toString().trim())){
             Toast.makeText(this, "Please enter a valid Item Name.", Toast.LENGTH_LONG).show();
         }
-        else if(quant == 0){
+        else if(TextUtils.isEmpty(txtItemQuant.getText().toString().trim())){
             Toast.makeText(this, "Please enter a valid Item Quantity.", Toast.LENGTH_LONG).show();
         }
-        else if(price == 0){
-            Toast.makeText(this, "Please enter a valid Item Price.", Toast.LENGTH_LONG).show();
+        else if(TextUtils.isEmpty(txtItemPrice.getText().toString().trim())){
+            Toast.makeText(this, "Please enter a valid Item Value.", Toast.LENGTH_LONG).show();
         }
-        else if(TextUtils.equals(location, "Item Location")){
+        else if(TextUtils.equals(txtItemLoc.getSelectedItem().toString().trim(), "Item Location")){
             Toast.makeText(this, "Please enter a valid Item Location.", Toast.LENGTH_LONG).show();
         }
-        else if(TextUtils.isEmpty(date)){
+        else if(TextUtils.isEmpty(txtItemDate.getText().toString().trim())){
             Toast.makeText(this, "Please enter a valid Item Purchase Date.", Toast.LENGTH_LONG).show();
         }
         else{
+
+            String code = txtItemCode.getText().toString().trim();
+            String name = txtItemName.getText().toString().trim();
+            int quant = Integer.parseInt(txtItemQuant.getText().toString().trim());
+            double price = Double.parseDouble(txtItemPrice.getText().toString().trim());
+            String location = txtItemLoc.getSelectedItem().toString().trim();
+            String date = txtItemDate.getText().toString().trim();
+            boolean third = itemThird.isChecked();
+            boolean checked = itemCheck.isChecked();
+
             ItemData itemData = new ItemData(code, name, quant, price, location, date, third, checked);
 
             databaseReference.child(code).setValue(itemData);

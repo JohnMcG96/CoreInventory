@@ -26,8 +26,6 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener{
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 
-
-
         btnOpenAdd = findViewById(R.id.btnOpenAdd);
         btnOpenRemove = findViewById(R.id.btnOpenRemove);
         btnEditItems = findViewById(R.id.btnEditItems);

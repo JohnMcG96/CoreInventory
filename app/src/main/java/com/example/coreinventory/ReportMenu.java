@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -27,8 +28,8 @@ public class ReportMenu extends AppCompatActivity implements View.OnClickListene
         }
 
         btnViewAll = findViewById(R.id.btnViewAll);
-        btnViewByLocation = findViewById(R.id.btnOpenRemove);
-        btnViewByName = findViewById(R.id.btnEditItems);
+        btnViewByLocation = findViewById(R.id.btnViewByLocation);
+        btnViewByName = findViewById(R.id.btnViewByName);
         btnMainMenu = findViewById(R.id.btnMainMenu);
         btnLogout = findViewById(R.id.btnLogout);
 
@@ -43,15 +44,15 @@ public class ReportMenu extends AppCompatActivity implements View.OnClickListene
     public void onClick(View view) {
         if(view == btnViewAll){
             finish();
-            startActivity(new Intent(this, ViewItems.class));
+            startActivity(new Intent(this, ItemByID.class));
         }
         if(view == btnViewByLocation){
             finish();
-            startActivity(new Intent(this, ViewItems.class));
+            startActivity(new Intent(this, ItemByLocation.class));
         }
         if(view == btnViewByName){
             finish();
-            startActivity(new Intent(this, ViewItems.class));
+            startActivity(new Intent(this, ItemByName.class));
         }
         if(view == btnMainMenu){
             finish();
@@ -62,5 +63,17 @@ public class ReportMenu extends AppCompatActivity implements View.OnClickListene
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            finish();
+            startActivity(new Intent(this, MainMenu.class));
+            return true;
+        }
+        return false;
     }
 }

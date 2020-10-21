@@ -9,12 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewItems"></activity>
         <activity android:name=".EditItem" />
         <activity android:name=".RemoveItem" />
         <activity android:name=".AddItem" />
         <activity android:name=".MainMenu" />
         <activity android:name=".Register" />
+        <activity android:name=".ReportMenu"/>
+        <activity android:name=".ItemByID"/>
+        <activity android:name=".ItemByLocation"/>
+        <activity android:name=".ItemByName"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
